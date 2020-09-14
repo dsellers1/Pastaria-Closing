@@ -1,0 +1,181 @@
+<!DOCTYPE html><html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/jquery.mobile-1.4.5.css">
+<script src="js/jquery.js"></script>
+<script type="text/javascript">
+	$(document).on('mobileinit', function(){
+		$.mobile.defaultPageTransition = 'slide';
+	});
+</script>
+<script src="js/jquery.mobile-1.4.5.js"></script>
+<script>function goBack() {window.history.go(-1);}</script>
+<script>
+	function math(){
+		var v100 = ~~parseFloat(document.getElementById("A4").value); 
+		var v50 = ~~parseFloat(document.getElementById("A5").value); 
+		var v20 = ~~parseFloat(document.getElementById("A6").value); 
+		var v10 = ~~parseFloat(document.getElementById("A7").value); 
+		var v5 = ~~parseFloat(document.getElementById("A8").value); 
+		var v1 = ~~parseFloat(document.getElementById("A9").value); 
+		var v025 = ~~parseFloat(document.getElementById("A10").value); 
+		var vGC = ~~parseFloat(document.getElementById("A11").value); 
+		var vCC = parseFloat(1*document.getElementById("A12").value); 
+		var vPO = ~~parseFloat(document.getElementById("A13").value); 
+		var vOT = ~~parseFloat(document.getElementById("A1").value); 
+		var vZ = ~~parseFloat(document.getElementById("A3").value); 
+		var vDrawer_Begin = ~~parseFloat(document.getElementById("A14").value);
+		var vDrawer_Total = (v100 * 100) + (v50 * 50) + (v20 * 20) + (v10 * 10) + (v5 * 5) + (v1 * 1) + (v025 * 0.25) + vGC + vCC - vPO + vOT
+		var vDrawer_Sales = vDrawer_Total - vDrawer_Begin
+		var vDrawer_vs_Register_Sales = vZ - vDrawer_Sales
+		
+		if (vDrawer_vs_Register_Sales <= 10 && vDrawer_vs_Register_Sales >= -10) {
+			document.getElementById('verify').innerHTML = "Drawer is within ±$10. " + vDrawer_vs_Register_Sales.toFixed(2);
+		} else if (vDrawer_vs_Register_Sales < 10) {
+			document.getElementById('verify').innerHTML = "Drawer is over by $" + Math.abs(vDrawer_vs_Register_Sales).toFixed(2);
+		} else if (vDrawer_vs_Register_Sales > 10) {
+			document.getElementById('verify').innerHTML = "Drawer is short by $" + vDrawer_vs_Register_Sales.toFixed(2);
+		}
+		
+		if (vCC != 0) {document.getElementById('Drop_Credit').innerHTML = "Credit Cards - $" + vCC;}
+		if (vGC != 0) {document.getElementById('Drop_Gift').innerHTML = "Gift Cards - $" + vGC;}
+		if (v100 != 0) {document.getElementById('Drop_100').innerHTML = "$100s - $" + (v100 * 100);}
+		if (v50 != 0) {document.getElementById('Drop_50').innerHTML = "$50s - $" + (v50 * 50);}
+		if (v20 != 0) {document.getElementById('Drop_20').innerHTML = "$20 - $" + (v20 * 20);}
+		if (v10 != 0 && v10 > 50) {document.getElementById('Drop_10').innerHTML = "$10s - $" + ((v10 - 50) * 10);}
+		if (v5 != 0 && v5 > 100) {document.getElementById('Drop_5').innerHTML = "$5s - $" + ((v5 - 100) * 5);}
+		if (v1 != 0 && v1 > 500) {document.getElementById('Drop_1').innerHTML = "$1s - $" + ((v1 - 500) * 1);}
+		if (vPO != 0) {document.getElementById('Drop_PO').innerHTML = "Payouts - $" + vPO;}
+		document.getElementById('Drop_Total').innerHTML = "???";
+		
+		document.getElementById('Begin_10').innerHTML = "$10s - $" + (v10 * 10);
+		document.getElementById('Begin_5').innerHTML = "$5s - $" + (v5 * 5);
+		document.getElementById('Begin_1').innerHTML = "$1s - $" + (v1 * 1);
+		document.getElementById('Begin_Q').innerHTML = "$Qs - $" + (v025 * 0.25).toFixed(2);
+		document.getElementById('Begin_Total').innerHTML = "???";
+
+		window.location.href = "#fourth";
+	}
+</script>
+
+
+
+</head>
+<body>
+
+
+
+
+<!-- Start of home page -->
+<div data-role="page" id="home">
+
+	<div data-role="header" data-position="fixed">
+		<h1>Closing Report Generator</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">	
+		<a href="#first" class="ui-btn ui-shadow">Pastaria</a>
+		<a href="#second" class="ui-btn ui-shadow">Seconda</a>
+		<a href="#third" class="ui-btn ui-shadow">Sarefino's</a>
+	</div><!-- /content -->
+
+	<div data-role="footer">
+		<h4>Page Footer</h4>
+	</div><!-- /footer -->
+</div><!-- /page -->
+
+
+
+<!-- Start of first page -->
+<div data-role="page" id="first">
+
+	<div data-role="header" data-position="fixed">
+		<button onclick="goBack()" class="ui-btn" data-rel="reverse">Back</button>
+		<h1>Pastaria</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<label for="A1">2PM X</label><input type="text" name="A1" id="A1" value="" placeholder="$0.00" maxlength="7">
+		<label for="A2">5PM X</label><span><input type="text" name="A2" id="A2" value="" placeholder="$0.00" maxlength="7"></span>
+		<label for="A3">Z</label><span><input type="text" name="A3" id="A3" value="" placeholder="$0.00" maxlength="7"></span>
+		<label for="A4">$100</label><span><input type="text" name="A4" id="A4" value="" placeholder="0" maxlength="3"></span>
+		<label for="A5">$50</label><span><input type="text" name="A5" id="A5" value="" placeholder="0" maxlength="3"></span>
+		<label for="A6">$20</label><span><input type="text" name="A6" id="A6" value="" placeholder="0" maxlength="3"></span>
+		<label for="A7">$10</label><span><input type="text" name="A7" id="A7" value="" placeholder="0" maxlength="3"></span>
+		<label for="A8">$5</label><span><input type="text" name="A8" id="A8" value="" placeholder="0" maxlength="3"></span>
+		<label for="A9">$1</label><span><input type="text" name="A9" id="A9" value="" placeholder="0" maxlength="3"></span>
+		<label for="A10">$0.25</label><span><input type="text" name="A10" id="A10" value="" placeholder="0" maxlength="3"></span>
+		<label for="A11">Gift cards value</label><span><input type="text" name="A11" id="A11" placeholder="$0.00" value=""></span>
+		<label for="A12">Credit card value</label><span><input type="text" name="A12" id="A12" placeholder="$0.00" value=""></span>
+		<label for="A13">Payout value</label><span><input type="text" name="A13" id="A13" placeholder="$0.00" value=""></span>
+		<label for="A14">Begin value</label><span><input type="text" name="A14" id="A14" placeholder="$0.00" value=""></span>
+		<button onclick="math()">Verify</button>
+	</div><!-- /content -->
+
+</div><!-- /page -->
+
+
+<!-- Start of second page -->
+<div data-role="page" id="second">
+	<div data-role="header">
+		<h1>Seconda</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p><a href="home">Back to home</a></p>
+	</div><!-- /content -->
+</div><!-- /page -->
+
+
+<!-- Start of third page -->
+<div data-role="page" id="third">
+
+	<div data-role="header">
+		<h1>Sarefino's</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<p><a href="home">Back to home</a></p>
+	</div><!-- /content -->
+
+</div><!-- /page -->
+
+
+<!-- Start of fourth page -->
+<div data-role="page" id="fourth">
+
+	<div data-role="header">
+		<button onclick="goBack()" class="ui-btn" data-rel="reverse">Back</button>
+		<h1>Drop and Closing Slips</h1>
+	</div><!-- /header -->
+
+	<div role="main" class="ui-content">
+		<h3 id="verify"></h5>
+		Drop Slip
+		<label id="Drop_Credit"></label>
+		<label id="Drop_Gift"></label>
+		<label id="Drop_100"></label>
+		<label id="Drop_50"></label>
+		<label id="Drop_20"></label>
+		<label id="Drop_10"></label>
+		<label id="Drop_5"></label>
+		<label id="Drop_1"></label>
+		<label id="Drop_PO"></label>
+		<hr>
+		<label id="Drop_Total"></label>
+		<br>
+		Begin Slip
+		<label id="Begin_10"></label>
+		<label id="Begin_5"></label>
+		<label id="Begin_1"></label>
+		<label id="Begin_Q"></label>
+		<hr>
+		<label id="Begin_Total"></label>	
+		
+	</div><!-- /content -->
+
+</div><!-- /page -->
+
+
+</body></html> 
