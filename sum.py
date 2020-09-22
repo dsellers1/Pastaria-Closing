@@ -2,46 +2,56 @@ import hassapi as hass
 
 class Sum(hass.Hass):
   global drawers
-  global vars
+  global inputs
   global sensors
   drawers = ["pastaria", "seconda", "sarefinos"]
-  vars = ["100", "50", "20", "10", "5", "1", "q", "cc", "gc", "po", "begin", "2pm_x", "5pm_x", "cust_count", "sales"]
-  sensors = "drawer_total", "drawer_sales", "begin_total", "drop_total"
+  inputs = ["100", "50", "20", "10", "5", "1", "q", "cc", "gc", "po", "begin", "2pm_x", "5pm_x", "cust_count", "sales"]
+  totals = ["drawer_total", "drawer_sales", "begin_total", "drop_total"]
+  sensors = inputs + totals
 
   def initialize(self):
-    for x in drawers:
-      # Following loop used to ensure sensors are valid in HA. These sensors are used to store the results of calculations.
-      for y in sensors:
-        sensorToCheck = "sensor." + x + "_" + y
-        if not self.entity_exists("sensor." + x + "_" + y):
+    for drawer in drawers:
+      # Following loop is used to ensure sensors are valid in HA. These sensors are used to store the results of calculations and are defined in the configuration.yaml.
+      for sensor in sensors:
+        sensorToCheck = "sensor." + drawer + "_" + sensor
+        if not self.entity_exists(sensorToCheck):
           self.set_state(sensorToCheck, state = 0)     
       # Following loop used to monitor changes in input text boxes.
-        entityToMonitor = "input_text." + x + "_" + a
-      for a in vars:
+      for input in inputs:
+        entityToMonitor = "input_text." + drawer + "_" + input
         self.listen_state(self.CB, entityToMonitor)
 
-#  def CB(self, entity, attribute, old, new, kwargs):
-#    new_state = float(new) * 5 #for example for a 5 dollar shine"
-#    self.set_state("sensor.sum", state = new_state)
-#    for x in drawers:
-#      for y in vars:
-#        self.set_state("sensor.sum", state = new_state)
-
   def CB(self, entity, attribute, old, new, kwargs):
-    # Determine what has changed by way of the entity name -- Not really needed. Just calculate everything...
-    # Plus, turns out that AD has a function that slice the entity and type already...
-    #monitoredEntityDrawer = entity.replace('input_text.', '') # Removes input_text
-    #monitoredEntityDrawer = monitoredEntityDrawer.split('_') # Creates list: 0 = drawer, 1 = vars
+    sensorToUpdate = entity.replace('input_text.', 'sensor.') # Changes input_text to sensor for the entity
+    type, name = self.split_entity(entity)
+    parts = name.split("_", 1)
+    drawer = parts[0]
+    denomination = parts[1]
     
-    # Perform math on the each drawer
     math_vars = [("100", 100, "+"), ("50", 50, "+"), ("20", 50, "+"), ("10", 10, "+"), ("5", 5, "+"), ("1", 1, "+"), ("q", 0.25, "+"), ("cc", 1, "+"), ("gc", 1, "+"), ("po", 1, "-")]
-    for x in drawers:
-        total = 0
-        for a, b, c in math_vars:
-          entityToEvaluate = "input_text." + x + "_" + a
-          total += float(self.get_state(entityToEvaluate)) * b
-         
-        self.log(x + " " + str(total))
-    
-    #state = self.get_state("input_text.pastaria_1")
-    #self.log(state)
+    for constants, multiplier, operation, in math_vars:
+        if denomination == constants:
+            state = int(new) * int(multiplier)
+            self.set_state(sensorToUpdate, state = state)
+            self.log(sensorToUpdate + " updated to " + str(state) + ".")
+            break
+        else:
+            state = int(new) * int(1)
+            self.set_state(sensorToUpdate, state = state)
+            self.log(sensorToUpdate + " updated to " + str(state) + ".")
+
+
+
+
+# Perform math on the each drawer
+#math_vars = [("100", 100, "+"), ("50", 50, "+"), ("20", 50, "+"), ("10", 10, "+"), ("5", 5, "+"), ("1", 1, "+"), ("q", 0.25, "+"), ("cc", 1, "+"), ("gc", 1, "+"), ("po", 1, "-")]
+#for x in drawers:
+#    total = 0
+#    for a, b, c in math_vars:
+#      entityToEvaluate = "input_text." + x + "_" + a
+#      total += float(self.get_state(entityToEvaluate)) * b
+#    
+#    self.log(x + " " + str(total))
+#
+#state = self.get_state("input_text.pastaria_1")
+#self.log(state)
