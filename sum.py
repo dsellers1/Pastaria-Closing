@@ -33,12 +33,10 @@ class Sum(hass.Hass):
         if denomination == constants:
             state = int(new) * int(multiplier)
             self.set_state(sensorToUpdate, state = state)
-            self.log(sensorToUpdate + " updated to " + str(state) + ".")
             break
         else:
             state = int(new) * int(1)
             self.set_state(sensorToUpdate, state = state)
-            self.log(sensorToUpdate + " updated to " + str(state) + ".")
 
 
 
